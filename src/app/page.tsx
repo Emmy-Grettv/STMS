@@ -86,10 +86,10 @@ const tourSites = [
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-     <section className="bg-[#1773CF] pb-8 flex flex-col items-center px-4 shadow-[0_10px_30px_rgba(0,0,0,0.20)] relative z-10">
+     <section className="bg-[#1773CF] pb-8 flex flex-col items-center px-4 shadow-[0_10px_30px_rgba(0,0,0,0.20)] relative z-10 mt-2 sm:mt-0">
       <Navbar />
         {/* Search bar */}
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-2xl mt-4 sm:mt-0">
           <div className="flex items-center gap-3 bg-white rounded-xl px-5 py-3 shadow-lg">
             <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 shrink-0" />
             <input
@@ -121,7 +121,7 @@ export default function HomePage() {
 
       {/* ── Stats ── */}
       <section className="bg-white border-b border-gray-200">
-        <div className=" mx-auto px-8 py-7 grid grid-cols-3 ">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-7 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-0">
           {stats.map(({ icon: Icon, value, label }, index) => (
             <div key={label} className="flex flex-col items-center">
               <Icon className="w-7 h-7  mb-1" style={{ color: iconColors[index] }}/>
@@ -133,22 +133,22 @@ export default function HomePage() {
       </section>
 
       {/* ── Welcome Banner ── */}
-      <section className="w-full h-20 mx-auto px-25 mt-8">
-        <div className="bg-gray-100 border border-blue-100 rounded-xl flex items-center justify-between gap-4 px-6 py-5">
-          <div className="flex items-center gap-4">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="bg-gray-100 border border-blue-100 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-5">
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center shrink-0">
               <MapPinIcon className="w-5 h-5 text-gray-400" />
             </div>
-            <div>
-              <p className="text-md font-semibold text-gray-900">Welcome to the Study Tour Management System</p>
-              <p className="text-sm text-gray-500 mt-0.5 font-sans">
+            <div className="text-center sm:text-left">
+              <p className="text-sm sm:text-md font-semibold text-gray-900">Welcome to the Study Tour Management System</p>
+              <p className="text-xs sm:text-sm text-gray-500 mt-0.5 font-sans">
                 Explore educational tour destinations across Rwanda. Schools, institutions, and individuals can now easily discover, book, and manage study tours online.
               </p>
             </div>
           </div>
           <Link
             href="/explore"
-            className="shrink-0 inline-flex items-center gap-2 bg-[#1565C0] hover:bg-[#1976D2] text-white text-sm font-semibold px-4 py-2 rounded-md transition-colors duration-200"
+            className="shrink-0 inline-flex items-center gap-2 bg-[#1565C0] hover:bg-[#1976D2] text-white text-sm font-semibold px-4 py-2 rounded-md transition-colors duration-200 w-full sm:w-auto justify-center"
           >
             Explore <ArrowRightIcon className="w-4 h-4" />
           </Link>
@@ -156,14 +156,14 @@ export default function HomePage() {
       </section>
 
       {/* ── Browse by Category ── */}
-      <section className="w-full mx-auto mt-10 px-25">
+      <section className="w-full max-w-7xl mx-auto mt-10 px-4 sm:px-6 lg:px-8">
         <h2 className="text-gray-900 font-bold text-lg mb-4">Browse by Category</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {categories.map(({ name, count }) => (
             <Link
               key={name}
               href="#"
-              className="bg-white border border-gray-200 rounded-lg px-15 py-3 hover:border-[#1565C0] hover:shadow-sm transition-all duration-200 group"
+              className="bg-white border border-gray-200 rounded-lg px-3 sm:px-4 py-3 hover:border-[#1565C0] hover:shadow-sm transition-all duration-200 group"
             >
               <p className="text-sm font-medium text-gray-800 group-hover:text-[#1565C0] transition-colors">{name}</p>
               <p className="text-xs text-gray-400 mt-0.5">{count} sites</p>
@@ -173,9 +173,9 @@ export default function HomePage() {
       </section>
 
       {/* ── All Tour Sites ── */}
-      <section className="w-full mx-auto px-25 mt-10 mb-12">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 mb-12">
         <h2 className="text-gray-900 font-bold text-lg mb-4">All Tour Sites</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {tourSites.map((site) => (
             <Link
               key={site.name}
