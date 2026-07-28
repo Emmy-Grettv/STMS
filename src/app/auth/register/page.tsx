@@ -1,137 +1,232 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { ChevronRight, Shield, LogIn } from 'lucide-react'
-import Link from 'next/link'
-import { MapIcon, MapPinIcon } from '@heroicons/react/24/outline'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import {
+  ArrowLeft,
+  ArrowRight,
+  MapPin,
+  User,
+  GraduationCap,
+  School,
+  Building2,
+  Briefcase,
+} from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import RegistrationStepper from '@/components/RegistrationStepper';
+
+type MainRole = 'visitor' | 'tour-site';
+type VisitorCategory = 'individual' | 'student' | 'school' | 'institution' | 'company';
+
+interface RoleOption {
+  id: MainRole;
+  title: string;
+  description: string;
+}
+
+interface CategoryOption {
+  id: VisitorCategory;
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const ROLES: RoleOption[] = [
+  {
+    id: 'visitor',
+    title: 'Visitor',
+    description: 'Book and Visit tour sites across Rwanda',
+  },
+  {
+    id: 'tour-site',
+    title: 'Tour Site',
+    description: 'Register your destination and manage booking',
+  },
+];
+
+const VISITOR_CATEGORIES: CategoryOption[] = [
+  {
+    id: 'individual',
+    title: 'Individual',
+    description: 'Personal or family educational visits',
+    icon: User,
+  },
+  {
+    id: 'student',
+    title: 'Student',
+    description: 'School or university student booking tours',
+    icon: GraduationCap,
+  },
+  {
+    id: 'school',
+    title: 'School/Group',
+    description: 'Primary, Secondary, or TVET institution',
+    icon: School,
+  },
+  {
+    id: 'institution',
+    title: 'Institution',
+    description: 'Government agency, NGO, or university',
+    icon: Building2,
+  },
+  {
+    id: 'company',
+    title: 'Company',
+    description: 'Private enterprise or corporate group',
+    icon: Briefcase,
+  },
+];
 
 export default function RegisterPage() {
-  const [selectedRole, setSelectedRole] = useState<'visitor' | 'tour-site' | null>('visitor')
-  const router = useRouter()
+  const [step, setStep] = useState<1 | 2>(1);
+  const [selectedRole, setSelectedRole] = useState<MainRole>('visitor');
+  const [selectedCategory, setSelectedCategory] = useState<VisitorCategory>('individual');
+  const router = useRouter();
 
-  const handleRoleSelect = (role: 'visitor' | 'tour-site') => {
-    setSelectedRole(role)
-  }
-
-  const handleContinue = () => {
-    if (selectedRole) {
-      router.push(`/register/${selectedRole}`)
+  const handleRoleSelect = (role: MainRole) => {
+    setSelectedRole(role);
+    if (role === 'tour-site') {
+      router.push('/auth/register/tour-site');
+    } else {
+      setStep(2);
     }
-  }
+  };
+
+  const handleCategorySelect = (category: VisitorCategory) => {
+    setSelectedCategory(category);
+    router.push(`/auth/register/${category}`);
+  };
 
   return (
-    <div className="min-h-screen bg-[#f9fafb] flex flex-col">
-      <Navbar />
-      
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col font-sans">
+      <header className="bg-[#1773CF] pb-4 px-4 shadow-sm">
+        <Navbar />
+      </header>
+
       <main className="flex-1 flex items-center justify-center py-12 px-4">
-        <div className="w-full max-w-md">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <div className="w-10 h-10 bg-[#1e88e5] rounded-xl flex items-center justify-center shadow-inner">
-                <MapPinIcon className="w-5 h-5 text-white" />
-              </div>
+        <div className="w-full max-w-lg">
+          {/* Centered Logo Icon */}
+          <div className="text-center mb-6">
+            <div className="w-12 h-12 rounded-lg bg-[#1773CF] flex items-center justify-center text-white mx-auto mb-4 shadow-sm">
+              <MapPin className="w-6 h-6" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-900 mb1">
+            <h1 className="text-2xl font-bold text-slate-900 mb-1">
               Create your account
             </h1>
-            <p className="text-sm text-[#707d8f]">
+            <p className="text-xs text-slate-400 font-medium">
               Join the Study Tour Management System
             </p>
-            <div className="flex items-center justify-center gap-2 mt-4">
-              <div className="h-2 w-8 bg-blue-600 rounded-full"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-            </div>
+
+            {/* Stepper Dots */}
+            <RegistrationStepper currentStep={step} totalSteps={3} />
           </div>
 
-          {/* Card Content */}
-          <Card className="border-0 shadow-sm bg-white p-6">
-            {/* Back Button */}
-            <button className="text-[#1773cf] text-sm font-medium flex items-center gap-1 hover:text-blue-700 transition-colors">
-              <span>← Back</span>
-            </button>
-
-            {/* Role Selection */}
-            <div>
-              <p className="text-sm font-semibold text-slate-900 mb-4">
-                I want to register as a...
-              </p>
-
-              <div className="space-y-3">
-                {/* Visitor Option */}
+          {/* Card Container */}
+          <div className="bg-white rounded-lg border border-slate-200/80 p-8 shadow-sm">
+            {/* Top Back Link */}
+            <div className="mb-4">
+              {step === 2 ? (
                 <button
-                  onClick={() => handleRoleSelect('visitor')}
-                  className={`w-full p-4 rounded-lg border-1 transition-all text-left ${
-                    selectedRole === 'visitor'
-                      ? 'border-[#1773cf] bg-[#e8f1fb]'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
-                  }`}
+                  onClick={() => setStep(1)}
+                  className="text-xs font-semibold text-[#1773CF] hover:underline inline-flex items-center gap-1"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-slate-900 mb-1">
-                        Visitor
-                      </h3>
-                      <p className="text-xs text-[#7f8b9d]">
-                        Visit and chat tour sites across Rwanda
-                      </p>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0 ml-2" />
-                  </div>
+                  <ArrowLeft className="w-3.5 h-3.5" /> Back
                 </button>
-
-                {/* Tour Site Option */}
-                <button
-                  onClick={() => handleRoleSelect('tour-site')}
-                  className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
-                    selectedRole === 'tour-site'
-                      ? 'border-blue-600 bg-blue-50'
-                      : 'border-slate-200 bg-white hover:border-slate-300'
-                  }`}
+              ) : (
+                <Link
+                  href="/"
+                  className="text-xs font-semibold text-[#1773CF] hover:underline inline-flex items-center gap-1"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-slate-900 mb-1">
-                        Tour Site
-                      </h3>
-                      <p className="text-xs text-[#7f8b9d]">
-                        Register your destination and manage booking
-                      </p>
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0 ml-2" />
-                  </div>
-                </button>
-              </div>
+                  <ArrowLeft className="w-3.5 h-3.5" /> Back
+                </Link>
+              )}
             </div>
 
-            {/* Continue Button */}
-            <Button
-              onClick={handleContinue}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors"
-            >
-              Continue
-            </Button>
+            {step === 1 ? (
+              /* Step 1: Role Selection */
+              <div className="space-y-4">
+                <h2 className="text-sm font-bold text-slate-900 mb-3">
+                  I want to register as a...
+                </h2>
 
-            {/* Login Link */}
-            <div className="text-center pt-2">
-              <p className="text-sm text-slate-600">
+                <div className="space-y-3">
+                  {ROLES.map((role) => (
+                    <button
+                      key={role.id}
+                      type="button"
+                      onClick={() => handleRoleSelect(role.id)}
+                      className={`w-full p-4 rounded-lg border text-left flex items-center justify-between transition-all ${
+                        selectedRole === role.id
+                          ? 'bg-[#ebf3fa] border-[#1773CF] shadow-xs'
+                          : 'bg-white border-slate-200 hover:bg-slate-50'
+                      }`}
+                    >
+                      <div>
+                        <h3 className="text-sm font-bold text-slate-900 mb-0.5">
+                          {role.title}
+                        </h3>
+                        <p className="text-xs text-slate-400">{role.description}</p>
+                      </div>
+                      <ArrowRight
+                        className={`w-4 h-4 ${
+                          selectedRole === role.id ? 'text-[#1773CF]' : 'text-slate-400'
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              /* Step 2: Visitor Category Selection */
+              <div className="space-y-4">
+                <h2 className="text-sm font-bold text-slate-900 mb-3">
+                  Select Visitor Type
+                </h2>
+
+                <div className="space-y-2.5">
+                  {VISITOR_CATEGORIES.map((cat) => {
+                    const Icon = cat.icon;
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => handleCategorySelect(cat.id)}
+                        className={`w-full p-3.5 rounded-lg border text-left flex items-center justify-between transition-all ${
+                          selectedCategory === cat.id
+                            ? 'bg-[#ebf3fa] border-[#1773CF]'
+                            : 'bg-white border-slate-200 hover:bg-slate-50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div>
+                            <h3 className="text-xs font-bold text-slate-900">{cat.title}</h3>
+                            <p className="text-[11px] text-slate-400">{cat.description}</p>
+                          </div>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-slate-400" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Bottom Login Prompt */}
+            <div className="text-center pt-6 mt-4">
+              <p className="text-xs text-slate-400 font-medium">
                 Already have an account?{' '}
-                <Link href="/auth/login" className="text-blue-600 font-medium hover:text-blue-700">
+                <Link href="/auth/login" className="text-[#1773CF] font-bold hover:underline">
                   Log in
                 </Link>
               </p>
             </div>
-          </Card>
+          </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
-  )
+  );
 }
